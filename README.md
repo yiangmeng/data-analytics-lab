@@ -12,7 +12,7 @@ Records include fields capturing pick-up and drop-off dates/times, pick-up and d
 
 The overall architecture is going to be something like this:
 
-![architecture-overview.png](images/architectureoveriew.PNG)
+![architecture-overview.png](images/architectureoverview.PNG)
 
 ---
 

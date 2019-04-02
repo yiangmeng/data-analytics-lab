@@ -55,7 +55,7 @@
       "ConstraintDescription" : "must contain only alphanumeric characters."
     },
   	"CSVCrawler": {
-      "Description": "Crawler Name for CSV File. This crawler will crawls the CSV file located in s3://us-west-2.serverless-analytics/NYC-transportation/taxi/ and infer the schema",
+      "Description": "Crawler Name for CSV File. This crawler will crawls the CSV file located in s3://ap-southeast-1.analytics-lab/NYC-transportation/taxi/ and infer the schema",
       "Type": "String",
       "MinLength": "4",
       "MaxLength": "255",
@@ -64,7 +64,7 @@
       "ConstraintDescription" : "must contain only alphanumeric characters."
     },
   	"ParquetCrawler": {
-      "Description": "Crawler Name for Parquer files. This will crawls s3://us-west-2.serverless-analytics/canonical/NY-Pub files and infer the schema",
+      "Description": "Crawler Name for Parquer files. This will crawls s3://ap-southeast-1.analytics-lab/canonical/NY-Pub files and infer the schema",
       "Type": "String",
       "MinLength": "4",
       "MaxLength": "255",
@@ -240,8 +240,8 @@
   							  "s3:PutObject"
   							],
   						 "Resource": [
-  						   "arn:aws:s3:::us-west-2.serverless-analytics/NYC-transportation/taxi/*",
-  						   "arn:aws:s3:::us-west-2.serverless-analytics/canonical/NY-Pub/*"
+  						   "arn:aws:s3:::ap-southeast-1.analytics-lab/NYC-transportation/taxi/*",
+  						   "arn:aws:s3:::ap-southeast-1.analytics-lab/canonical/NY-Pub/*"
   						  ]
   						}
   					]
@@ -271,7 +271,7 @@
         "Targets": {
           "S3Targets": [
             {
-              "Path": "s3://us-west-2.serverless-analytics/canonical/NY-Pub"
+              "Path": "s3://ap-southeast-1.analytics-lab/canonical/NY-Pub"
             }
           ]
         },
@@ -290,7 +290,7 @@
         "Targets": {
           "S3Targets": [
             {
-              "Path": "s3://us-west-2.serverless-analytics/NYC-transportation/taxi/"
+              "Path": "s3://ap-southeast-1.analytics-lab/NYC-transportation/taxi/"
             }
           ]
         },
