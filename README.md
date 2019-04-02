@@ -1,5 +1,5 @@
 
-# Data Lake Design and Optimization on AWS
+# Building an End-to-End Serverless Data Analytics Solution on AWS
 
 
 ## Overview

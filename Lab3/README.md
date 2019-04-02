@@ -268,4 +268,4 @@ Results for the above query look like the following:
 ![athenapercentilequery-nytaxi.png](images/avg-type-percentile.png)
 
 ---
-Continue to [Lab 4](../Lab2/README.md).
+Continue to [Lab 4](../Lab4/README.md).
