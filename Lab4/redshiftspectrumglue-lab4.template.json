@@ -30,13 +30,13 @@
       "ConstraintDescription" : "must start with a-z and contain only a-z or 0-9."
     },
     "MasterUserPassword": {
-      "Description": "The password associated with the master user account for the redshift cluster that is being created. ",
+      "Description": "The password associated with the master user account for the redshift cluster that is being created. Password must contain 8 to 64 printable ASCII characters excluding: /, \", ', \\, and @. It must contain 1 uppercase letter, 1 lowercase letter, and 1 number.",
       "Type": "String",
       "NoEcho": "true",
       "MinLength": "1",
       "MaxLength": "41",
       "AllowedPattern" : "[a-zA-Z0-9]*",
-      "ConstraintDescription" : "must contain only alphanumeric characters."
+      "ConstraintDescription" : "Password must contain 8 to 64 printable ASCII characters excluding: /, \", ', \\, and @. It must contain 1 uppercase letter, 1 lowercase letter, and 1 number."
     },
     "DatabaseName": {
       "Description": "The name of the database to be created when the redshift cluster is created",
@@ -112,7 +112,8 @@
             "us-east-1"  : { "ver" : "ami-6057e21a" },
             "us-east-2"  : { "ver" : "ami-5ec1673e" },
             "us-west-2" :  { "ver" : "ami-32d8124a" },
-            "eu-west-1" :  { "ver" : "ami-760aaa0f" }
+            "eu-west-1" :  { "ver" : "ami-760aaa0f" },
+            "ap-southeast-1" :  { "ver" : "ami-0b419c3a4b01d1859" }
     }
   },
   "Resources" : {
