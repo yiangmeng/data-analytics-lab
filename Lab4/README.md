@@ -1,273 +1,317 @@
-# Lab 4: Analysis of data in Amazon S3 using Amazon Redshift Spectrum
+# Lab 3: Visualization using Amazon QuickSight
 
-* [Deploying Amazon Redshift Cluster](#deploying-amazon-redshift-cluster)
-* [Running AWS Glue Crawlers](#running-aws-glue-crawlers---csv--parquet-crawler)
-* [Create Redshift Spectrum Scehma and reference external table form AWS Glue Data Catalog Database](#create-redshift-spectrum-scehma-and-reference-external-table-form-aws-glue-data-catalog-database)
-* [Querying data from Amazon S3 using Amazon Redshift Spectrum](#querying-data-from-amazon-s3-using-amazon-redshift-spectrum)
-* [Querying partitioned data using Amazon Redshift Spectrum](#querying-partitioned-data-using-amazon-redshift-spectrum)
+* [Create an Amazon S3 bucket](#create-an-amazon-s3-bucket)
+* [Creating Amazon Athena Database and Table](#creating-amazon-athena-database-and-table)
+    * [Create Athena Database](#create-database)
+    * [Create Athena Table](#create-a-table)
+* [Signing up for Amazon Quicksight Standard Edition](#signing-up-for-amazon-quicksight-standard-edition)
+* [Configuring Amazon QuickSight to use Amazon Athena as data source](#configuring-amazon-quicksight-to-use-amazon-athena-as-data-source)
+* [Visualizing the data using Amazon QuickSight](#visualizing-the-data-using-amazon-quicksight)
+    * [Add year based filter to visualize the dataset for the year 2016](#add-year-based-filter-to-visualize-the-dataset-for-the-year-2016)
+    * [Add the month based filter for the month of January](#add-the-month-based-filter-for-the-month-of-january)
+    * [Visualize the data by hour of day for the month of January 2016](#visualize-the-data-by-hour-of-day-for-the-month-of-january-2016)
+    * [Visualize the data for the month of January 2016 for all taxi types(yellow, green, fhv)](#visualize-the-data-for-the-month-of-january-2016-for-all-taxi-typesyellow-green-fhv)
+
 
 
 ## Architectural Diagram
-![architecture-overview-lab4.png](images/architecture-overview-lab4.png)
+![architecture-overview-lab2.png](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab2/architecture-overview-lab2.png)
 
-## Deploying Amazon Redshift Cluster
 
-In this section you will use a CloudFormation template to create an Amazon RedShift cluster. The template will also install [pgweb](https://github.com/sosedoff/pgweb), SQL Client for PostgreSQL, in an  Amazon EC2 instance to connect and run your queries on the launched Amazon Redshift cluster.
+## Create an Amazon S3 bucket
+> Note: If you have already have an S3 bucket in your AWS Account you can skip this section.
 
-Alternatively, you can connect to the Amazon Redshift cluster using standard SQL Clients such as SQL Workbench/J. For more information refer http://docs.aws.amazon.com/redshift/latest/mgmt/connecting-using-workbench.html.
+1. Open the [AWS Management console for Amazon S3](https://s3.console.aws.amazon.com/s3/home?region=us-west-2)
+2. On the S3 Dashboard, Click on **Create Bucket**.
 
-1. Login in to your AWS console and open the [Amazon CloudFormation Dashboard](https://ap-southeast-1.console.aws.amazon.com/cloudformation/home?region=ap-southeast-1])
-2. Click **Create Stack**
-3. Select **Specify an Amazon S3 template URL**
-4. Copy paste the following S3 template URL
+![createbucket.png](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab1/createbucket.png)
 
->[https://s3-ap-southeast-1.amazonaws.com/aws-slides-pdf/msd/redshiftspectrumglue-lab4.template.json](https://s3-ap-southeast-1.amazonaws.com/aws-slides-pdf/msd/redshiftspectrumglue-lab4.template.json)
+3. In the **Create Bucket** pop-up page, input a unique **Bucket name**. So it’s advised to choose a large bucket name, with many random characters and numbers (no spaces).
 
-6. Click **Next**
+    1. Select the region as **Oregon**.
+    2. Click **Next** to navigate to next tab.
+    3. In the **Set properties** tab, leave all options as default.
+    4. In the **Set permissions** tag, leave all options as default.
+    5. In the **Review** tab, click on **Create Bucket**
 
->**Note:**
->Click on the link [redshiftspectrumglue-lab4.template.json](../Lab4/redshiftspectrumglue-lab4.template.json) to view the Amazon CloudFormation template file
+![createbucketpopup.png](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab1/createbucketpopup.png)
 
-![Stack Name](images/stack-name.png)
+## Creating Amazon Athena Database and Table
 
-8. Type a name *(e.g. RedshiftSpectrumLab)* for the **Stack Name**
+> Note: If you have complete the [Lab 1: Serverless Analysis of data in Amazon S3 using Amazon Athena](../Lab1) you can skip this section and go to the next section [Signing up for Amazon Quicksight Standard Edition](#signing-up-for-amazon-quicksight-standard-edition)
 
-![Cluster Config](images/cluster-config.png)
+Amazon Athena uses Apache Hive to define tables and create databases. Databases are a logical grouping of tables. When you create a database and table in Athena, you are simply describing the schema and location of the table data in Amazon S3\. In case of Hive, databases and tables don’t store the data along with the schema definition unlike traditional relational database systems. The data is read from Amazon S3 only when you query the table. The other benefit of using Hive is that the metastore found in Hive can be used in many other big data applications such as Spark, Hadoop, and Presto. With Athena catalog, you can now have Hive-compatible metastore in the cloud without the need for provisioning a Hadoop cluster or RDS instance. For guidance on databases and tables creation refer [Apache Hive documentation](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL). The following steps provides guidance specifically for Amazon Athena.
 
-9. Enter the following **Parameters** for **Redshift Cluster Configuration**
+![createbucket.png](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab1/createbucket.png)
 
-    1. Choose *multi-node* for **ClusterType**
-    2. Type *2* for the **NumberOfNodes**
-    3. For **NodeType** select *ds2.xlarge*
+3. In the **Create Bucket** pop-up page, input a unique **Bucket name**. So it’s advised to choose a large bucket name, with many random characters and numbers (no spaces).
+i.Select the region as **Oregon**.
+ii. Click **Next** to navigate to next tab.
+iii. In the **Set properties** tab, leave all options as default.
+iv. In the **Set permissions** tag, leave all options as default.
+v. In the **Review** tab, click on **Create Bucket**
 
-![Database Config](images/database-config.png)
+![createbucketpopup.png](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab1/createbucketpopup.png)
 
-10.  Enter the following **Parameters** for **Redshift Database Configuration**.
-    i. Type a name (e.g. dbadmin) for **MasterUserName**.
-    ii. Type a password for **MasterUserPassword**.
-    iii. Type the a name (e.g. taxidb) for **DatabaseName**.
-    iv. Type the IP address of your local machine for **ClientIP**.
+### Create Database
 
-![Glue Crawler](images/glue-crawler.png)
+1. Open the [AWS Management Console for Athena](https://console.aws.amazon.com/athena/home).
+2. If this is your first time visiting the AWS Management Console for Athena, you will get a Getting Started page. Choose **Get Started** to open the Query Editor. If this isn't your first time, the Athena **Query Editor** opens.
+3. Make a note of the AWS region name, for example, for this lab you will need to choose the **US West (Oregon)** region.
+4. In the Athena **Query Editor**, you will see a query pane with an example query. Now you can start entering your query in the query pane.
+5. To create a database named *mydatabase*, copy the following statement, and then choose **Run Query**:
 
-11. Enter the following **Parameters** for **Glue Crawler Configuration**
-    1. Type the name(e.g. taxi-spectrum-db) for **GlueCatalogDBName**.    
-    2. Type the name(e.g. csvCrawler) for **CSVCrawler**.
-    3. Type the name(e.g. parquetCrawler) for **ParquetCrawler**.
+````sql
+    CREATE DATABASE mydatabase
+````
 
-12. Click **Next**
+6.	Ensure *mydatabase* appears in the DATABASE list on the **Catalog** dashboard
 
-![Tags](images/tags.png)
+![athenacatalog.png](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab1/athenacatalog.png)
 
-13. [Optional] In the **Tags** sub-sections in **Options** type a **Key** name *(e.g. Name)* and **Value** for key.
-14. Click **Next**
+### Create a Table
 
-![Acknowledge](images/acknowledge.png)
+1. Ensure that current AWS region is **US West (Oregon)** region
 
-15. Check **I acknowledge that AWS CloudFormation might create IAM resources.**
-16. Click **Create**
+2. Ensure **mydatabase** is selected from the DATABASE list and then choose **New Query**.
 
-> **Note:** This is may take approximately 15 minutes
+3. In the query pane, copy the following statement to create a the NYTaxiRides table, and then choose **Run Query**:
 
-17. Ensure that status of the Amazon CloudFromation stack that you just create is **CREATE_COMPLETE**
-18. Select your Amazon CloudFormation stack *(RedshiftSpectrumLab)*
-19. Click on the **Outputs** tab
-20. Review the list of **Key** and thier **Value** which will look like the following.
+````sql
+  CREATE EXTERNAL TABLE NYTaxiRides (
+    vendorid STRING,
+    pickup_datetime TIMESTAMP,
+    dropoff_datetime TIMESTAMP,
+    ratecode INT,
+    passenger_count INT,
+    trip_distance DOUBLE,
+    fare_amount DOUBLE,
+    total_amount DOUBLE,
+    payment_type INT
+    )
+  PARTITIONED BY (YEAR INT, MONTH INT, TYPE string)
+  STORED AS PARQUET
+  LOCATION 's3://us-west-2.serverless-analytics/canonical/NY-Pub'
+````
 
-![Output](images/output.png)
+4.Ensure the table you just created appears on the Catalog dashboard for the selected database.
 
-You can also check out the Resources created from the stack. Here are the key resources:
-- 1x RedShift Database cluster
-- 2x Glue Crawler (1 parquet crawler and 1 csv crawler)
-- 1x Glue database
-- 1x Linux instance for pgweb (SQL Client)
-- IAM roles and security groups
+Now that you have created the table you need to add the partition metadata to the Amazon Athena Catalog.
+
+1. Choose **New Query**, copy the following statement into the query pane, and then choose **Run Query** to add partition metadata.
+
+```sql
+    MSCK REPAIR TABLE NYTaxiRides
+```
+The returned result will contain information for the partitions that are added to NYTaxiRides for each taxi type (yellow, green, fhv) for every month for the year from 2009 to 2016
+
+## Signing up for Amazon Quicksight Standard Edition
+
+1. Open the [AWS ManagementConsole for QuickSight](https://us-east-1.quicksight.aws.amazon.com/sn/start).
+
+![image](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab2/qsimage1.PNG)
+
+2. If this is the first time you are accessing QuickSight, you will see a sign-uplanding page for QuickSight.
+3. Click on **Sign up for QuickSight**.
+
+> **Note:** Chrome browser might timeout at this step. If that's the case, try this step in Firefox/Microsoft Edge/Safari.
+
+![image](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab2/qsimage2.PNG)
+
+4. On the next page, for the subscription type select the **"Standard Edition"** and click **Continue**.
+
+![image](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab2/qsimage3.PNG)
+
+5. On the next page,
+
+   i. Enter a unique **QuickSight account name.**
+
+   ii. Enter avalid email for **Notification email address**.
+
+   iii. Just for this step, leave the **QuickSight capacity region **as **N.Virginia**.
+
+   iv. Ensure that **Enable autodiscovery of your data and users in your Amazon Redshift, Amazon RDS and AWS IAM Services** and **Amazon Athena** boxes are checked.
+
+   v. **Click Finish**.
+
+   vi. You will be presented with a with message **Congratulations**! **You are signed up for Amazon QuickSight! **on successful sign up. Click on **Go to Amazon QuickSight**.
+
+![image](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab2/qsimage4.PNG)
+
+6. On the Amazon QuickSight dashboard, navigate to User Settings page on the Top-Right section and click **Manage QuickSight**.
+
+![image](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab2/qsimage5.PNG)
+
+7. In this section, click on **Account Settings**.
+8. Under Account Settings, in **Account Permissions** Click **Edit AWS Permissions**.
+
+![image](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab2/qsimage6.PNG)
+
+9. Check the box for **Amazon S3** and you will see a pop-up to select Amazon S3 buckets.
+10. Ensure **Select All **is checked.
+11. Click on **Select buckets**.
+
+![image](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab2/qsimage7.PNG)
+
+12. Check the box for **Amazon S3 Storage Analytics**[Optional].
+13. Click **Apply**.
+
+## Configuring Amazon QuickSight to use Amazon Athena as data source
+
+> For this lab, you will need to choose the **US West (Oregon)** region.
+
+![image](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab2/qsimage8.PNG)
+
+1. Click on the region icon on the top-right corner of the page, and select **US West (Oregon)**.
+
+![image](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab2/qsimage9.PNG)
+
+2. Click on **Manage data** on the top-right corner of the webpage to review existing data sets.
+3. Click on **New data set** on the top-left corner of the webpage and review the options.
+
+![image](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab2/qsimage10.PNG)
+
+4. Select **Athena** as a Data source.
+
+![image](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab2/qsimage11.PNG)
+
+5. Enter the **Data source** **name** (e.g. *AthenaDataSource*).
+6. Click **Create data source**.
+7. Select the **mydatabase** database.
+
+![image](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab2/qsimage12.PNG)
+
+8. Choose the **nytaxirides** table.
+9. Choose **Edit/Preview** data.
+
+> This is a crucial step. Please ensure you choose **Edit/Preview** data.
+
+![image](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab2/qsimage13.PNG)
+
+10. Under **Fields** on the left column, choose **New field**
+
+    i. Select the **extract** operation from Function list.
+
+    ii. Select **pickup_datetime** from the **Field list**.
+
+    iii. For **Calculated field name**, type **hourofday**.
+
+    iv. Type ‘HH’ so the Formula is **extract('HH',{pickup_datetime})**
+
+    v. Choose **Create** to add a field which is calculated from an existing field. In this case, the **hourofday** field is calculated from the **pickup_datetime filed** based on the specified formula.
+
+
+
+11. Choose **Save and Visualize** on top of the page.
+
+## Visualizing the data using Amazon QuickSight
+
+Now that you have configured the data source and created a new filed to represent the hour of the day, in this section you will filter the data by year followed by month to visualize the taxi data for the entire month of January 2016 based on the **pickup_datetime** field.
+
+### Add year based filter to visualize the dataset for the year 2016
+
+
+![image](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab2/qsimage14.PNG)
+
+1. Ensure that current AWS region is **US West (Oregon)** region.
+
+2. Under the **Fields List**, select the **year** field to show the distribution of fares per year.
+
+3. To reformat the **year** without comma
+
+   i. Select the dropdown arrow for the **year **field.
+
+   ii. Select **Format 1,234.5678 **from the dropdown menu.
+
+   iii. Select **1235**.
+
+![image](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab2/qsimage15.PNG)
+
+4. To add a filter on the **year** filed,
+
+   i. Select the dropdown for **year** field from the **Fields list**.
+
+   ii. Select **Add filter to the field** from the dropdown menu.
+
+![image](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab2/qsimage16.PNG)
+
+5. To filter the data only for the year 2016
+
+   i. Choose the new filter that you just created by clicking on **#** next to filter name **year** under the **Edit filter** menu.
+
+   ii. Select **Filter list** for the two dropdowns under the filter name.
+
+   iii. Deselect **Select All**.
+
+   iv. Select only **2016**.
+
+   v. Click **Apply**.
+
+   vi. Click **Close**.
+
+### Add the month based filter for the month of January
+
+![image](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab2/qsimage17.PNG)
+
+1. Ensure that current AWS region is **US West(Oregon)** region.
+2. Select **Visualize** from the navigation menu in the left-hand corner.
+3. Under the **Fields list**, deselect **year** by clicking on **year** field name.
+4. Select **month** by clicking on the **month** field name from the **Fields list**.
+
+5. To filter the data set for the month of January (Month 1)
+
+   i. Select the dropdown arrow for **month** field under the **Fields List**.
+
+   ii. Select **Add filter to the field**.
+
+![image](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab2/qsimage18.PNG)
+
+6. To filter the data for month of January 2016 (Month 1),
+
+   i. Choose the new filter that you just created by clicking on **#** next to filter name **month** under the **Edit Filter** menu.
+
+   ii. Select **Filter list** for the two dropdowns under the filter name.
+
+   iii. Deselect **ALL**.
+
+   iv. Select only **1**.
+
+   v. Click **Apply**
+
+   vi. Click **Close**.
+
+### Visualize the data by hour of day for the month of January 2016
+
+![image](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab2/qsimage19.PNG)
+
+1. Select **Visualize** from the navigation menu in the left-hand corner.
+2. Under the **Fields list**, deselect **month** by clicking on **month** field name.
+3. Select **hourofday** by clicking on the **hourofday** field name from the **Fields list**.
+4. Change the visual type to a line chart by selecting the line chart icon highlighted in the screenshot below under **Visual types**.
+5. Using the slider on x-axis, select the entire range [0,23] for **hourofday** field.
+
+### Visualize the data for the month of January 2016 for all taxi types(yellow, green, fhv)
+
+![image](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab2/qsimage20.PNG)
+
+1. Click on the double drop-down arrow underneath your username at the top-right corner of the page to reveal **X-axis**, **Value** and **Color** under **Field wells**.
+2. Under the **Fields list**, deselect **hourofday** by clicking on **hourofday** field name.
+3. Select **pickup_datetime** for x-axis by clicking on the **pickup_datetime **field name from **Fields list**.
+4. Select **type** for Color by clicking on the **type** field name from **Fields list.**
+
+5. Click on the field name **pickup_datetime** in x-axis to reveal a sub-menu.
+6. Select **Aggregate:Day** to aggregate by day.
+
+![image](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab2/qsimage21.PNG)
+8. Using the slider on x-axis, select the entire month of January 2016 for **pickup_datetime** field.
+
+
+> Note: The interesting outlier in the above graph is that on Jan23rd, 2016, you see the dip in the number of taxis across all types. Doing a quick google search for that date, gets us this weather article from NBC New York
+> ![image](https://s3.amazonaws.com/us-east-1.data-analytics/labcontent/reinvent2017content-abd313/lab2/qsimage22.PNG)
+
+*Using Amazon Qu.ickSight, you were able to see patterns across a time-series data by building visualizations, performing ad-hoc analysis, and quickly generating insights.*
 
 ---
+## License
 
-## Running AWS Glue Crawlers - CSV & Parquet Crawler
-1. Open [AWS Management Console for Glue](https://ap-southeast-1.console.aws.amazon.com/glue/home?region=ap-southeast-1#)
-2. Go to AWS Glues Crawlers page by clicking on **Crawlers** in the navigation pane
-
-![Crawlers](images/crawlers.png)
-
-3. Select the AWS Glue Crawler for CSV (e.g. csvCrawler)
-4. Click **Run crawler**
-5. Select the AWS Glue Crawler for CSV (e.g. csvCrawler)
-6. Click **Run crawler**
-
-> Note: This may take approximately 5 min for both the crawlers to parse the data in CSV and Parquet format.
-
-> If you are interested, you can view the raw data of what we are crawling from here: [CSV](https://console.aws.amazon.com/s3/home?region=ap-southeast-1&bucket=us-west-2.serverless-analytics&prefix=NYC-transportation/taxi/) | [Parquet](https://console.aws.amazon.com/s3/home?region=ap-southeast-1&bucket=us-west-2.serverless-analytics&prefix=canonical/NY-Pub/).
-
-![Crawlers Completed](images/crawlers-completed.png)
-
-7. Wait for the **Status** of both the crawlers to be in the *Ready* state
-
-Now that you have run the crawlers lest ensure that new tables *taxi* and *ny_pub* been created.
-
-8. To to the list of databases in the AWS Glue Data Catalog click on **Databases** in the navigation pane.
-9. Click on **taxi-spectrum-db**
-
-![taxispectrumdb](images/taxi-spectrum-db.png)
-
-10. Click on **Tables in taxi-spectrum-db**. If you see no tables listed, click on the refresh button.
-
-![taxispectrumdb-tables](images/taxi-spectrum-db-tables.png)
-
-11. Click on **taxi** to review the table definition and schema
-12. Navigate back and click on **ny_pub** to review the table definition and schema
-
->**Note:**
->The good news is that you don’t have to create a new table or definition to read the CSV document we just looked at. With AWS Glue crawlers, you have already inferred the schema and created tables namely taxi and ny_pub.
-
-13. Click on **View partitions** to review the partition metadata
-
->**Note:**
-> The major advantage of Glue Crawlers is that they understand the partitions based on the S3 object prefix and automatically create the table with partitions as part of the crawling.
-
----
-
-## Create Redshift Spectrum Schema and reference external table from AWS Glue Data Catalog Database
-
-1. Open the [Amazon CloudFormation Dashboard](https://ap-southeast-1.console.aws.amazon.com/cloudformation/home?region=ap-southeast-1])
-2. Select your Amazon CloudFormation stack *(RedshiftSpectrumLab)*
-3. Click on the **Outputs** tab
-4. Navigate to the **pgWeb** URL
-5. In the pgWeb console ensure that the **SQL Query** tab is selected
-6. Copy the following statement to create a database *(e.g. taxispectrum)* in Redshift Spectrum
-
-```sql
-  create external schema taxispectrum from data catalog
-  database 'taxi-spectrum-db'
-  iam_role '<specify the redshift IAM Role arn from the CloudFormation outputs section>'
-```
-7. Replace the *<specify the redshift IAM Role arn from the CloudFormation output section'>* in the statment with the value of **redshiftIAMRole** from the **Outputs** tab of the Amazon CloudFromation stack *(RedshiftSpectrumLab)* you created as part of the lab.
-> Note: The IAM role must be in single quotes
-
-8. Click **Run Query**
-
-> Note: You can create an external table in Amazon Redshift, AWS Glue, Amazon Athena, or an Apache Hive metastore. For more information, see [Getting Started Using AWS Glue](http://docs.aws.amazon.com/glue/latest/dg/getting-started.html) in the AWS Glue Developer Guide, [Getting Started](http://docs.aws.amazon.com/athena/latest/ug/getting-started.html) in the Amazon Athena User Guide, or [Apache Hive](http://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-hive.html) in the Amazon EMR Developer Guide. If your external table is defined in AWS Glue, Athena, or a Hive metastore, you first create an external schema that references the external database. Then you can reference the external table in your SELECT statement by prefixing the table name with the schema name, without needing to create the table in Amazon Redshift. For more information, see [Creating External Schemas for Amazon Redshift Spectrum](http://docs.aws.amazon.com/redshift/latest/dg/c-spectrum-external-schemas.html).
-
-## Querying data from Amazon S3 using Amazon Redshift Spectrum
-
-Now that you have created the schema, you can run queries on the data set and see the results in PGWeb Console.
-
-1. Copy the following statement into the query pane, and then choose **Run Query**.
-
-```sql
-    SELECT * FROM taxispectrum.taxi limit 10
-```
-
-Results for the above query look like the following:
-
-![Query Results](images/query-result.png)
-
-2.	Copy the following statement into the query pane, and then choose **Run Query** to get the total number of taxi rides for yellow cabs.
-
-```sql
-    SELECT COUNT(1) as TotalCount FROM taxispectrum.taxi
-```
-Results for the above query look like the following:
-
-![taxispectrum count](images/total-count-taxispectrum.png)
-
-3. Copy the following statement into the query pane, and then choose **Run Query** to query for the number of rides per vendor, along with the average fair amount for yellow taxi rides
-
-```sql
-    SELECT
-    CASE vendorid
-         WHEN '1' THEN 'Creative Mobile Technologies'
-         WHEN '2' THEN 'VeriFone Inc'
-         ELSE CAST(vendorid as VARCHAR) END AS Vendor,
-    COUNT(1) as RideCount,
-    avg(total_amount) as AverageAmount
-    FROM taxispectrum.taxi
-    WHERE total_amount > 0
-    GROUP BY (1)
-```
-
-Results for the above query look like the following:
-
-![Vendor result](images/vendor-taxispectrum-result.png)
-
-## Querying partitioned data using Amazon Redshift Spectrum
-
-By partitioning your data, you can restrict the amount of data scanned by each query, thus improving performance and reducing cost. Amazon Redshift Spectrum leverages Hive for [partitioning](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL#LanguageManualDDL-AlterPartition) data. You can partition your data by any key. A common practice is to partition the data based on time, often leading to a multi-level partitioning scheme. For example, a customer who has data coming in every hour might decide to partition by year, month, date, and hour. Another customer, who has data coming from many different sources but loaded one time per day, may partition by a data source identifier and date.
-
-
-Now that you have added the partition metadata to the Athena data catalog you can now run your query.
-
-1. Copy the following statement into the query pane, and then choose **Run Query** to get the total number of taxi rides
-
-```sql
-    SELECT count(1) as TotalCount from taxispectrum.ny_pub
-```
-Results for the above query look like the following:
-
-![Total Count.png](images/total-count-nypub.png)
-
->**Note:**
-> This query executes much faster because the data set is partitioned and it in optimal format - Apache Parquet (an open source columnar).
-
-2. Copy the following statement into the query pane, and then choose **Run Query** to get the total number of taxi rides by year
-
-```sql
-    SELECT YEAR, count(1) as TotalCount from taxispectrum.ny_pub GROUP BY YEAR
-```
-Results for the above query look like the following:
-![Total Count Year.png](images/total-count-taxispectrum-year.png)
-
-3. Copy the following statement into the query pane, and then choose **Run Query** to get the top 12 months by total number of rides across all the years
-
-```sql
-    SELECT YEAR, MONTH, COUNT(1) as TotalCount
-    FROM taxispectrum.ny_pub
-    GROUP BY (1), (2)
-    ORDER BY (3) DESC LIMIT 12
-```
-Results for the above query look like the following:
-![Total Count Limit](images/total-count-taxispectrum-limit.png)
-
-4. Copy the following statement into the query pane, and then choose **Run Query** to get the monthly ride counts per taxi time for the year 2016.
-
-```sql
-    SELECT MONTH, TYPE, COUNT(1) as TotalCount
-    FROM taxispectrum.ny_pub
-    WHERE YEAR = 2016
-    GROUP BY (1), (2)
-    ORDER BY (1), (2)
-```
-Results for the above query look like the following:
-![Total Count Group](images/total-count-taxispectrum-group.png)
-
-5. Copy the following statement anywhere into the query pane, and then choose **Run Query**.
-
-```sql
-    SELECT MONTH, TYPE,
-      avg(trip_distance) avgDistance,
-      avg(total_amount/trip_distance) avgCostPerMile,
-      avg(total_amount) avgCost,
-      percentile_cont(0.99)
-      within group (order by total_amount)
-    FROM taxispectrum.ny_pub
-    WHERE YEAR = 2016 AND (TYPE = 'yellow' OR TYPE = 'green')
-    AND trip_distance > 0 AND total_amount > 0
-    GROUP BY MONTH, TYPE
-    ORDER BY MONTH
-```
-
-Results for the above query look like the following:
-
-![Total Count Group Avg](images/total-count-taxispectrum-group-avg.png)
-
-## Deleting the Amazon CloudFormation Stack
-
-Now that you have successfully queried the dataset using Amazon Redshift Spectrum, you need to tear down the stack that you deployed using the Amazon CloudFormation template.
-
-1. Open the [Amazon CloudFormation Dashboard](https://ap-southeast-t.console.aws.amazon.com/cloudformation/home?region=ap-southeast-1)
-2. Enable the check box next to the name of the stack *(e.g. RedshiftSpectrumLab)* that you deployed at the beginingo fo the Lab.
-3. Click on **Actions** drop down button.
-4. Select **Delete Stack**'
-5. Click **Yes, Delete** on the *Delete Stack* pop dialog
-6. Ensure that Amazon CloudFromation stack name *(e.g. RedshiftSpectrumLab)* is no longer showing in the list of stacks.
+This library is licensed under the Apache 2.0 License.
