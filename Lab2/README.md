@@ -271,3 +271,6 @@ Now that you have successfully queried the dataset using Amazon Redshift Spectru
 4. Select **Delete Stack**'
 5. Click **Yes, Delete** on the *Delete Stack* pop dialog
 6. Ensure that Amazon CloudFromation stack name *(e.g. RedshiftSpectrumLab)* is no longer showing in the list of stacks.
+
+---
+Continue to [Lab 3](../Lab3/README.md).

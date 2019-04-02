@@ -310,3 +310,6 @@ Now that you have configured the data source and created a new filed to represen
 > ![image](images/qsimage22.PNG)
 
 *Using Amazon Qu.ickSight, you were able to see patterns across a time-series data by building visualizations, performing ad-hoc analysis, and quickly generating insights.*
+
+---
+Back to [Home](../README.md).

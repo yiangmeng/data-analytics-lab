@@ -266,6 +266,6 @@ Now the execution time is ~ 3 second, as the amount of data scanned by the query
 Results for the above query look like the following:
 
 ![athenapercentilequery-nytaxi.png](images/avg-type-percentile.png)
----
 
-Congratulations! You may now try out [Lab 2](../Lab2/README.me) where we look at how to visualize the data using QuickSight.
+---
+Continue to [Lab 4](../Lab2/README.md).
