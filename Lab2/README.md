@@ -268,4 +268,6 @@ Results for the above query look like the following:
 ![athenapercentilequery-nytaxi.png](images/avg-type-percentile.png)
 
 ---
-Continue to [Lab 3](../Lab3/README.md).
+
+## Summary
+In the next lab, we will look at using Redshift Spectrum to query the data in S3. Continue to [Lab 3](../Lab3/README.md).

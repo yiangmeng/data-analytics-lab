@@ -292,4 +292,4 @@ In this lab, you went from data discovery to analyzing a canonical dataset, with
 
 From there, you saw the datasets were in different formats, but represented the same thing: NY City Taxi rides. You then converted them into a canonical (or normalized) form that is easily queried through Athena and possible in QuickSight, in addition to a wide number of different tools not covered in this post.
 
-In the next lab, we will look at using Redshift Spectrum to query the data in S3. Continue to [Lab 2](../Lab2/README.md).
+In the next lab, we will look deeper at using Athena to query the data in S3. Continue to [Lab 2](../Lab2/README.md).
