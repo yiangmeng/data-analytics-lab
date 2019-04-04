@@ -21,8 +21,8 @@ The overall architecture is going to be something like this:
 |Lab|Name|
 |---|----|
 |Lab 1|[Serverless ETL and Data Discovery using Amazon Glue](Lab1/README.md)|
-|Lab 2|[Serverless Analysis of data in Amazon S3 using Amazon Athena](Lab3/README.md)|
-|Lab 3|[Analysis of data in Amazon S3 using Amazon Redshift Spectrum](Lab2/README.md)|
+|Lab 2|[Serverless Analysis of data in Amazon S3 using Amazon Athena](Lab2/README.md)|
+|Lab 3|[Analysis of data in Amazon S3 using Amazon Redshift Spectrum](Lab3/README.md)|
 |Lab 4|[Visualization using Amazon QuickSight](Lab4/README.md)|
 
 ---
