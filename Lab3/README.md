@@ -17,7 +17,7 @@ In this section you will use a CloudFormation template to create an Amazon RedSh
 
 Alternatively, you can connect to the Amazon Redshift cluster using standard SQL Clients such as SQL Workbench/J. For more information refer http://docs.aws.amazon.com/redshift/latest/mgmt/connecting-using-workbench.html.
 
-1. Login in to your AWS console and open the [Amazon CloudFormation Dashboard](https://ap-southeast-1.console.aws.amazon.com/cloudformation/home?region=ap-southeast-1])
+1. Login in to your AWS console and open the [Amazon CloudFormation Dashboard](https://ap-southeast-1.console.aws.amazon.com/cloudformation/home?region=ap-southeast-1)
 2. Click **Create Stack**
 3. Select **Specify an Amazon S3 template URL**
 4. Copy paste the following S3 template URL
