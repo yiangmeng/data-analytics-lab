@@ -21,14 +21,14 @@
 ## Create an Amazon S3 bucket
 > Note: If you have already have an S3 bucket in your AWS Account you can skip this section.
 
-1. Open the [AWS Management console for Amazon S3](https://s3.console.aws.amazon.com/s3/home?region=us-west-2)
+1. Open the [AWS Management console for Amazon S3](https://s3.console.aws.amazon.com/s3/home?region=ap-southeast-1)
 2. On the S3 Dashboard, Click on **Create Bucket**.
 
 ![createbucket.png](images/createbucket.png)
 
 3. In the **Create Bucket** pop-up page, input a unique **Bucket name**. So it’s advised to choose a large bucket name, with many random characters and numbers (no spaces).
 
-    1. Select the region as **Singapore**.
+    1. Select the region as **Asia Pacific (Singapore)**.
     2. Click **Next** to navigate to next tab.
     3. In the **Set properties** tab, leave all options as default.
     4. In the **Set permissions** tag, leave all options as default.
@@ -38,14 +38,14 @@
 
 ## Creating Amazon Athena Database and Table
 
-> Note: If you have complete the [Lab 1: Serverless Analysis of data in Amazon S3 using Amazon Athena](../Lab1) you can skip this section and go to the next section [Signing up for Amazon Quicksight Standard Edition](#signing-up-for-amazon-quicksight-standard-edition)
+> Note: If you have complete the [Lab 3: Serverless Analysis of data in Amazon S3 using Amazon Athena](../Lab3/README.md) you can skip this section and go to the next section [Signing up for Amazon Quicksight Standard Edition](#signing-up-for-amazon-quicksight-standard-edition)
 
-Amazon Athena uses Apache Hive to define tables and create databases. Databases are a logical grouping of tables. When you create a database and table in Athena, you are simply describing the schema and location of the table data in Amazon S3\. In case of Hive, databases and tables don’t store the data along with the schema definition unlike traditional relational database systems. The data is read from Amazon S3 only when you query the table. The other benefit of using Hive is that the metastore found in Hive can be used in many other big data applications such as Spark, Hadoop, and Presto. With Athena catalog, you can now have Hive-compatible metastore in the cloud without the need for provisioning a Hadoop cluster or RDS instance. For guidance on databases and tables creation refer [Apache Hive documentation](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL). The following steps provides guidance specifically for Amazon Athena.
+Amazon Athena uses Apache Hive to define tables and create databases. Databases are a logical grouping of tables. When you create a database and table in Athena, you are simply describing the schema and location of the table data in Amazon S3. In case of Hive, databases and tables don’t store the data along with the schema definition unlike traditional relational database systems. The data is read from Amazon S3 only when you query the table. The other benefit of using Hive is that the metastore found in Hive can be used in many other big data applications such as Spark, Hadoop, and Presto. With Athena catalog, you can now have Hive-compatible metastore in the cloud without the need for provisioning a Hadoop cluster or RDS instance. For guidance on databases and tables creation refer [Apache Hive documentation](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL). The following steps provides guidance specifically for Amazon Athena.
 
 ![createbucket.png](images/createbucket.png)
 
 3. In the **Create Bucket** pop-up page, input a unique **Bucket name**. So it’s advised to choose a large bucket name, with many random characters and numbers (no spaces).
-i.Select the region as **Singapore**.
+i.Select the region as **Asia Pacific (Singapore)**.
 ii. Click **Next** to navigate to next tab.
 iii. In the **Set properties** tab, leave all options as default.
 iv. In the **Set permissions** tag, leave all options as default.
@@ -91,7 +91,7 @@ v. In the **Review** tab, click on **Create Bucket**
     )
   PARTITIONED BY (YEAR INT, MONTH INT, TYPE string)
   STORED AS PARQUET
-  LOCATION 's3://us-west-2.serverless-analytics/canonical/NY-Pub'
+  LOCATION 's3://analytics-lab/canonical/NY-Pub'
 ````
 
 4.Ensure the table you just created appears on the Catalog dashboard for the selected database.
@@ -158,7 +158,7 @@ The returned result will contain information for the partitions that are added t
 
 ## Configuring Amazon QuickSight to use Amazon Athena as data source
 
-> For this lab, you will need to choose the **Singapore** region.
+> For this lab, you will need to choose the **Asia Pacific (Singapore)** region.
 
 ![image](images/qsimage8.PNG)
 
@@ -309,7 +309,7 @@ Now that you have configured the data source and created a new filed to represen
 > Note: The interesting outlier in the above graph is that on Jan23rd, 2016, you see the dip in the number of taxis across all types. Doing a quick google search for that date, gets us this weather article from NBC New York
 > ![image](images/qsimage22.PNG)
 
-*Using Amazon Qu.ickSight, you were able to see patterns across a time-series data by building visualizations, performing ad-hoc analysis, and quickly generating insights.*
+*Using Amazon QuickSight, you were able to see patterns across a time-series data by building visualizations, performing ad-hoc analysis, and quickly generating insights.*
 
 ---
 Back to [Home](../README.md).

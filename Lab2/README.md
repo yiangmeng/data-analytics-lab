@@ -69,7 +69,7 @@ Now that you have a database, you are ready to create a table that is based on t
     )
     ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
     STORED AS TEXTFILE
-    LOCATION 's3://us-west-2.serverless-analytics/NYC-Pub/yellow/'
+    LOCATION 's3://analytics-lab/NYC-Pub/yellow/'
 ````
 
 >**Note:**
@@ -148,7 +148,7 @@ By partitioning your data, you can restrict the amount of data scanned by each q
     )
   PARTITIONED BY (YEAR INT, MONTH INT, TYPE string)
   STORED AS PARQUET
-  LOCATION 's3://us-west-2.serverless-analytics/canonical/NY-Pub'
+  LOCATION 's3://analytics-lab/canonical/NY-Pub'
 ````
 
 4.Ensure the table you just created appears on the Catalog dashboard for the selected database.
