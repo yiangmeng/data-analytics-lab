@@ -128,7 +128,7 @@ The returned result will contain information for the partitions that are added t
 
    ii. Enter a valid email for **Notification email address**.
 
-   iii. Just for this step, leave the **QuickSight capacity region **as **N.Virginia**.
+   iii. Ensure that your region is in **Asia Pacific (Singapore)**.
 
    iv. Ensure that **Enable autodiscovery of your data and users in your Amazon Redshift, Amazon RDS and AWS IAM Services** and **Amazon Athena** boxes are checked.
 
