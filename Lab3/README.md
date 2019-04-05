@@ -94,7 +94,7 @@ You can also check out the Resources created from the stack. Here are the key re
 
 3. Select the AWS Glue Crawler for CSV (e.g. csvCrawler)
 4. Click **Run crawler**
-5. Select the AWS Glue Crawler for CSV (e.g. csvCrawler)
+5. Select the AWS Glue Crawler for CSV (e.g. parquetCrawler)
 6. Click **Run crawler**
 
 > Note: This may take approximately 5 min for both the crawlers to parse the data in CSV and Parquet format.
