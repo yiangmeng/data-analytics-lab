@@ -28,7 +28,7 @@
 
 3. In the **Create Bucket** pop-up page, input a unique **Bucket name**. So it’s advised to choose a large bucket name, with many random characters and numbers (no spaces).
 
-    1. Select the region as **Asia Pacific (Singapore)**.
+    1. Select the region as **US East (N. Virginia)**.
     2. Click **Next** to navigate to next tab.
     3. In the **Set properties** tab, leave all options as default.
     4. In the **Set permissions** tag, leave all options as default.
@@ -45,7 +45,7 @@ Amazon Athena uses Apache Hive to define tables and create databases. Databases 
 ![createbucket.png](images/createbucket.png)
 
 3. In the **Create Bucket** pop-up page, input a unique **Bucket name**. So it’s advised to choose a large bucket name, with many random characters and numbers (no spaces).
-i.Select the region as **Asia Pacific (Singapore)**.
+i.Select the region as **US East (N. Virginia)**.
 ii. Click **Next** to navigate to next tab.
 iii. In the **Set properties** tab, leave all options as default.
 iv. In the **Set permissions** tag, leave all options as default.
@@ -57,7 +57,7 @@ v. In the **Review** tab, click on **Create Bucket**
 
 1. Open the [AWS Management Console for Athena](https://console.aws.amazon.com/athena/home).
 2. If this is your first time visiting the AWS Management Console for Athena, you will get a Getting Started page. Choose **Get Started** to open the Query Editor. If this isn't your first time, the Athena **Query Editor** opens.
-3. Make a note of the AWS region name, for example, for this lab you will need to choose the **Singapore** region.
+3. Make a note of the AWS region name, for example, for this lab you will need to choose the **US East (N. Virginia)** region.
 4. In the Athena **Query Editor**, you will see a query pane with an example query. Now you can start entering your query in the query pane.
 5. To create a database named *mydatabase*, copy the following statement, and then choose **Run Query**:
 
@@ -71,7 +71,7 @@ v. In the **Review** tab, click on **Create Bucket**
 
 ### Create a Table
 
-1. Ensure that current AWS region is **Singapore** region
+1. Ensure that current AWS region is **US East (N. Virginia)** region
 
 2. Ensure **mydatabase** is selected from the DATABASE list and then choose **New Query**.
 
@@ -91,7 +91,7 @@ v. In the **Review** tab, click on **Create Bucket**
     )
   PARTITIONED BY (YEAR INT, MONTH INT, TYPE string)
   STORED AS PARQUET
-  LOCATION 's3://analytics-lab/canonical/NY-Pub'
+  LOCATION 's3://serverless-analytics/canonical/NY-Pub'
 ````
 
 4.Ensure the table you just created appears on the Catalog dashboard for the selected database.
@@ -128,7 +128,7 @@ The returned result will contain information for the partitions that are added t
 
    ii. Enter a valid email for **Notification email address**.
 
-   iii. Ensure that your region is in **Asia Pacific (Singapore)**.
+   iii. Ensure that your region is in **US East (N. Virginia)**.
 
    iv. Ensure that **Enable autodiscovery of your data and users in your Amazon Redshift, Amazon RDS and AWS IAM Services** and **Amazon Athena** boxes are checked.
 
@@ -158,11 +158,11 @@ The returned result will contain information for the partitions that are added t
 
 ## Configuring Amazon QuickSight to use Amazon Athena as data source
 
-> For this lab, you will need to choose the **Asia Pacific (Singapore)** region.
+> For this lab, you will need to choose the **US East (N. Virginia)** region.
 
 ![image](images/qsimage8.PNG)
 
-1. Click on the region icon on the top-right corner of the page, and select **Singapore**.
+1. Click on the region icon on the top-right corner of the page, and select **US East (N. Virginia)**.
 
 ![image](images/qsimage9.PNG)
 
@@ -213,7 +213,7 @@ Now that you have configured the data source and created a new filed to represen
 
 ![image](images/qsimage14.PNG)
 
-1. Ensure that current AWS region is **Singapore** region.
+1. Ensure that current AWS region is **US East (N. Virginia)** region.
 
 2. Under the **Fields List**, select the **year** field to show the distribution of fares per year.
 
@@ -253,7 +253,7 @@ Now that you have configured the data source and created a new filed to represen
 
 ![image](images/qsimage17.PNG)
 
-1. Ensure that current AWS region is **Singapore** region.
+1. Ensure that current AWS region is **US East (N. Virginia)** region.
 2. Select **Visualize** from the navigation menu in the left-hand corner.
 3. Under the **Fields list**, deselect **year** by clicking on **year** field name.
 4. Select **month** by clicking on the **month** field name from the **Fields list**.
