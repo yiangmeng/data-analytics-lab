@@ -99,7 +99,7 @@ You can also check out the Resources created from the stack. Here are the key re
 
 > Note: This may take approximately 5 min for both the crawlers to parse the data in CSV and Parquet format.
 
-> If you are interested, you can view the raw data of what we are crawling from here: [CSV](https://console.aws.amazon.com/s3/home?region=ap-southeast-1&bucket=us-west-2.serverless-analytics&prefix=NYC-transportation/taxi/) | [Parquet](https://console.aws.amazon.com/s3/home?region=ap-southeast-1&bucket=us-west-2.serverless-analytics&prefix=canonical/NY-Pub/).
+> If you are interested, you can view the raw data of what we are crawling from here: [CSV](https://console.aws.amazon.com/s3/home?region=ap-southeast-1&bucket=analytics-lab&prefix=NYC-transportation/taxi/) | [Parquet](https://console.aws.amazon.com/s3/home?region=ap-southeast-1&bucket=analytics-lab&prefix=canonical/NY-Pub/).
 
 ![Crawlers Completed](images/crawlers-completed.png)
 
