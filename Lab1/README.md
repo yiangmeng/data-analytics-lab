@@ -58,7 +58,7 @@ Create an IAM role that has permission to your Amazon S3 sources, targets, tempo
    ```
    aws-glue-scripts-msd-workshop<100>-ap-southeast-1
    ```
-   and it would be easier to choose/select this bucket for the remainder of this Lab3.
+   and it would be easier to choose/select this bucket for the remainder of this Lab.
 
    1. Select the region as **Asia Pacific (Singapore)**.
    2. Click **Create** to create (on the left bottom) your bucket with all the default settings.
